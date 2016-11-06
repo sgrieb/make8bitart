@@ -66,6 +66,7 @@
     $buttonOpenLocal : $('#open-local'),
     $buttonImportPXON : $('#import-pxon'),
     $buttonExportPXON : $('#export-pxon'),
+    $buttonExportLed : $('#export-led'),
 
     $pixelSizeInput : $('.pixel-size-input'),
     $pixelSizeDemoDiv : $('#pixel-size-demo'),
@@ -896,6 +897,17 @@
     }
   };
 
+  DOM.$buttonExportLed.click(function(){
+    $.ajax({
+        type: 'POST',
+        url: '/pxon',
+        contentType: 'application/json',
+        data: localStorage.make8bitartPxon,
+        done: function(data){
+            app.log("asdf");
+        }
+    });
+  });
 
   /* pxon */
 
@@ -999,6 +1011,7 @@
     // export pxon in new window
     window.open('data:text/json,' + encodeURIComponent(JSON.stringify(pxon)), '_blank');
   };
+
 
 
   /*** EVENTS ***/
