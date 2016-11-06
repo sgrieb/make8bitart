@@ -234,12 +234,15 @@
 
   var resetCanvas = function(background) {
     if ( window.confirm('You cannot undo canvas resets. Are you sure you want to erase this entire drawing?') ) {
+      
       ctx.clearRect(0, 0, DOM.$canvas.width(), DOM.$canvas.height());
 
-      if ( background && background !== 'rgba(0, 0, 0, 0)') {
-        ctx.fillStyle = background;
-        ctx.fillRect(0,0,DOM.$canvas.width(),DOM.$canvas.height());
-      }
+      // make the canvas transparent
+      ctx.fillStyle = 'rgba(0, 0, 0, 0)';
+      ctx.fillRect(0,0,DOM.$canvas.width(),DOM.$canvas.height());
+
+      //reset storage
+      localStorage.make8bitartPxon = JSON.stringify([]);
 
       // reset history
       undoRedoHistory = [];
@@ -278,6 +281,8 @@
     else {
       ctx.fillRect(x,y,size,size);
     }
+
+    pushPixelToStorage(x, y, color, size);
 
     return {
       x: x,
@@ -469,6 +474,8 @@
     historyPointer++;
     DOM.$undo.removeAttr('disabled');
   };
+
+
 
   var undoRedo = function(pointer, undoFlag) {
     var undoRedoColor, nextPointer;
@@ -909,6 +916,10 @@
 
           // draw image to reset canvas
           resetCanvas();
+
+          // set local storage
+          localStorage.make8bitartPxon = JSON.stringify(pxon.pxif.pixels);
+
           pxon.pxif.pixels.forEach(function(e, i, a){
             drawPixel(e.x, e.y, e.color, e.size );
           });
@@ -918,6 +929,50 @@
     }
     else {
       alert('Your browser doesn\'t support FileReader, which is required for uploading custom palettes.');
+    }
+  };
+
+  var pushPixelToStorage = function(x, y, color, size) {
+    // clone the storage
+    var pxonArr = JSON.parse(localStorage.make8bitartPxon);
+    var newStorage = pxonArr.slice(0);
+
+    var newPixel = {
+      x:x,
+      y:y,
+      color:color,
+      size:size
+    };
+
+    if(pxonArr.length > 0){
+      var found = false;
+      // check the storage for our new pixel
+      pxonArr.forEach(function(val, index){
+        // we are already storing this pixel
+        if(val.x == x && val.y == y){
+          found = true;
+          if(color == 'rgba(0, 0, 0, 0)'){
+            // remove if its transparent
+            newStorage.splice(index, 1);
+          }
+          else{
+            // replace it, its a new color
+            newStorage[index] = newPixel;
+          }
+        }
+      });
+      if(!found){
+        newStorage.push(newPixel);
+      }
+
+      //update the storage
+      localStorage.make8bitartPxon = JSON.stringify(newStorage);
+    }
+    else{
+      // this is the first item
+      if(color != 'rgba(0, 0, 0, 0)'){
+        localStorage.make8bitartPxon = JSON.stringify([newPixel]);
+      }
     }
   };
 
@@ -939,7 +994,7 @@
     pxon.exif.dateTimeOriginal = ( pxon.exif.dateTimeOriginal ) ? pxon.exif.dateTimeOriginal : pxon.exif.dateTime;
 
     // pxif
-    pxon.pxif.pixels = drawHistory;
+    pxon.pxif.pixels = JSON.parse(localStorage.make8bitartPxon);
 
     // export pxon in new window
     window.open('data:text/json,' + encodeURIComponent(JSON.stringify(pxon)), '_blank');
@@ -1428,6 +1483,7 @@
     colorHistory = [];
     DOM.$colorHistoryPalette.find('li').remove();
     localStorage.colorHistory = [];
+    localStorage.make8bitartPxon = JSON.stringify([]);
     DOM.$colorHistoryModule.addClass(classes.hidden);
   });
 
