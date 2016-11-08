@@ -2,8 +2,10 @@
 
 # Development Install
 
-Flag no optional during dev since you aren't on a Raspi!
+Flag no optional during dev since you aren't on a Raspi
 `npm install --no-optional`
+
+Rename .env.sample to .env
 
 # Client side based on: make8bitart
 
