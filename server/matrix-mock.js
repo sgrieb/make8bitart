@@ -1,7 +1,9 @@
 'use-strict';
 
 // constructor
-function MatrixMock (){};
+function MatrixMock (){
+    console.log('Matrix started!');
+};
 
 MatrixMock.prototype.fill = function (red, green, blue) {
     console.log('Filling with : RGB(' + red + ', ' + green + ', ' + blue + ')');

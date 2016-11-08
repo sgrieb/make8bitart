@@ -4,6 +4,8 @@ var express = require('express');
 var path = require('path');
 var fs = require("fs");
 var bodyParser = require('body-parser');
+var Frame = require("./frame");
+
 var app;
 
 // constructor
@@ -20,6 +22,10 @@ WebServer.prototype.start = function () {
 
     // post files
     app.post('/pxon', function (req, res) {
+
+        var frame = new Frame(req.body);
+
+        // write the file
         fs.writeFileSync(path.join(__dirname, './pxon/test.json'), JSON.stringify(req.body), function(err) {
             if(err) {
                 return console.log(err);
@@ -27,6 +33,9 @@ WebServer.prototype.start = function () {
 
             console.log("The file was saved!");
         }); 
+
+        
+
         res.send('Oh hey!');
     });
 
