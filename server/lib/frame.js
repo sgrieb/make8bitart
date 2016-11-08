@@ -1,6 +1,7 @@
 'use-strict';
 
 var _ = require('lodash');
+var Rgba = require('./rgba');
 
 // constructor
 function Frame (pxon){
@@ -13,7 +14,10 @@ function Frame (pxon){
         // sort pxon by default
         _.sortBy(pxon, ['x', 'y']);
 
-        console.log(pxon);
+        // attach rgb objects
+        pxon.forEach(function(val){
+            val.rgba = new Rgba(val.color);
+        });
     }
 };
 

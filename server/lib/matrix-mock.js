@@ -1,5 +1,7 @@
 'use-strict';
 
+var Frame = require("./frame");
+
 // constructor
 function MatrixMock (){
     console.log('Matrix started!');
