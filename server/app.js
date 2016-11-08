@@ -1,5 +1,16 @@
 'use strict';
 
+require('dotenv').config();
+var LedMatrix;
+
+// mock the led matrix during development
+if (process.env.DEVELOPMENT) {
+    LedMatrix = require("./matrix-mock");
+}
+else {
+    LedMatrix = require("node-rpi-rgb-led-matrix");
+}
+
 var express = require('express');
 var path = require('path');
 var fs = require("fs");
@@ -26,5 +37,11 @@ app.post('/pxon', function (req, res) {
 });
 
 console.log('Server started!');
+
+// turn on the matrix!
+
+var matrix = new LedMatrix();
+matrix.fill(255, 50, 100);
+matrix.setPixel(0, 0, 0, 50, 255);
 
 app.listen(3000);

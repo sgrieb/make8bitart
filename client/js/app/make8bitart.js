@@ -175,8 +175,6 @@
     DOM.$canvas.off('mousemove');
   });
 
-
-
   /*** DRAGGY POSITIONS ***/
 
   DOM.$header.css({
