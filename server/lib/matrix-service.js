@@ -15,15 +15,15 @@ function MatrixService (matrix) {
 
 MatrixService.prototype.setFrame = function (frame) {
     if(frame){
-        setPixels(frame);
+        setPixels(frame, this.matrix);
     }
     else{
-        setPixels(this.defaultFrame);
+        setPixels(this.defaultFrame, this.matrix);
     }
 
-    function setPixels(frame) {
+    function setPixels(frame, matrix) {
         frame.pxon.forEach(function(val){
-            this.matrix.setPixel();
+            matrix.setPixel(val.x, val.y, val.rgba.R, val.rgba.G, val.rgba.B, val.rgba.A);
         });
     }
 }
