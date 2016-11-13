@@ -17,13 +17,13 @@ WebServer.prototype.start = function () {
     app.use(bodyParser.json());
 
     // host static files
-    app.use('/', express.static(path.join(__dirname, '../client')));
+    app.use('/', express.static(path.join(__dirname, '../../client')));
 
     // post files
     app.post('/pxon', function (req, res) {
         
         // write the file
-        fs.writeFileSync(path.join(__dirname, './data/test.json'), JSON.stringify(req.body), function(err) {
+        fs.writeFileSync(path.join(__dirname, '../data/test.json'), JSON.stringify(req.body), function(err) {
             if(err) {
                 return console.log(err);
             }

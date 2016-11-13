@@ -1,16 +1,25 @@
 'use-strict';
 
 var fs = require('fs');
+var path = require('path');
 var Frame = require('./frame');
 
 // constructor
 function MatrixService (matrix) {
-    this.matrix = matrix;
-    this.config = JSON.parse(fs.readFileSync(__dirname + '/../data/config.json'));
+    var obj = this;
+    obj.matrix = matrix;
+    obj.config = JSON.parse(fs.readFileSync(path.join(__dirname, '../config.json')));
 
-    // turn pxon to frame
-    this.defaultFrame = new Frame(JSON.parse(fs.readFileSync(__dirname + '/../data/'+ this.config.default +'.json')));
-    var a = 1;
+    var defaultPath = path.join(__dirname, '../data/'+ obj.config.default +'.json');
+
+    try {
+        fs.accessSync(defaultPath, fs.F_OK);
+        // turn pxon to frame
+        obj.defaultFrame = new Frame(JSON.parse(fs.readFileSync(defaultPath)));
+    } catch (e) {
+        // file doesnt exist, init empty
+        obj.defaultFrame = new Frame([]);
+    }
 };
 
 MatrixService.prototype.setFrame = function (frame) {
